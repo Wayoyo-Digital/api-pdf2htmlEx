@@ -1,7 +1,9 @@
 import importlib
 import pkgutil
-import controllers
+
 from fastapi import FastAPI
+
+import controllers
 
 def register_controllers(app: FastAPI) -> None:
     modules = pkgutil.iter_modules(controllers.__path__)
