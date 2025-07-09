@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  api:
+    image: wayoyo/python-pdf2htmlex:fastapi-ubuntu-24.04
+    container_name: pdf2htmlex-api
+    ports:
+      - 80:8000
+    volumes:
+      - .:/app
+      - $HOME/.ssh:/home/application/.ssh:ro
+      - $HOME/.gitconfig:/home/application/.gitconfig:ro
+    entrypoint: ["/bin/bash" , "-c", "python3 -m fastapi dev main.py --host 0.0.0.0 --port 8000"]
