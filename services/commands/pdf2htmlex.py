@@ -19,11 +19,8 @@ The command will execute pdf2htmlEX on the input file and capture the output.
 """
 
 class Pdf2HtmlExCommand(Command):
-    def __init__(self):
-        pass
+    PDF2HTML_BINARY = "/usr/local/bin/pdf2htmlEX"
 
     def execute(self, *args):
-        pprint(args)
-        command = f"/usr/local/bin/pdf2htmlEX {args[0]}"
-        output = subprocess.run(args=[command], shell=True, capture_output=True)
+        output = subprocess.run([self.PDF2HTML_BINARY, args[0]], capture_output=True)
         pprint(output.stderr.decode('utf-8'))

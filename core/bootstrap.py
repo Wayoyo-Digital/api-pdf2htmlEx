@@ -24,6 +24,8 @@ Register commands with the Command Bus.
 
 This function iterates through the commands package and registers each command
 with the Command Bus. Commands are identified by their class name ending with "Command".
+Only one command class per module is supported - if multiple command classes exist in
+a module, only the first one will be registered.
 """
 def register_commands() -> None:
     import re
@@ -31,9 +33,9 @@ def register_commands() -> None:
     from services.commands.bus import BusCommand
 
     modules = pkgutil.iter_modules(commands.__path__)
+    pattern = re.compile(r"^.+Command$")
     for _, module_name, _ in modules:
         module = importlib.import_module(f"services.commands.{module_name}")
-        pattern = re.compile(r"^.+Command$")
         classes = [name for name in dir(module) if pattern.match(name)]
         if classes:
             class_name = getattr(module, classes[0])

@@ -31,7 +31,13 @@ class BusCommand(Command):
 
     def execute(self, name: str, *args):
         handler_class = self.commands.get(name)
+        
         if not handler_class:
             raise ValueError(f"Command {name} not found")
+        
         command = handler_class.get_instance()
+
+        if not args:
+            raise ValueError(f"No arguments provided for command {name}")
+        
         command.execute(*args)

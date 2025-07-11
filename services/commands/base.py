@@ -23,13 +23,13 @@ Example:
     cmd.execute('arg1', 'arg2')
 """
 class Command(ABC):
-    instance = None
+    instance = {}
 
     @classmethod
     def get_instance(cls):
-        if cls.instance is None:
-            cls.instance = cls()
-        return cls.instance
+        if cls not in cls.instance:
+            cls.instance[cls] = cls()
+        return cls.instance[cls]
     
     @abstractmethod
     def execute(self, *args):
