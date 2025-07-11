@@ -30,7 +30,7 @@ a module, only the first one will be registered.
 def register_commands() -> None:
     import re
     from services import commands
-    from services.commands.bus import BusCommand
+    from services.commands.bus import Bus as BusCommand
 
     modules = pkgutil.iter_modules(commands.__path__)
     pattern = re.compile(r"^.+Command$")

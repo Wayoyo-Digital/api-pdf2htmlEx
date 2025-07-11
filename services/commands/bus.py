@@ -1,4 +1,4 @@
-from .base import Command
+from .base import Base as Command
 
 """
 Command Bus implementing both Singleton and Command Registry patterns.
@@ -21,7 +21,7 @@ Attributes:
     commands (dict): Mapping of command names to handler classes
 """
 
-class BusCommand(Command):
+class Bus(Command):
     def __init__(self):
         self.commands = {}
 

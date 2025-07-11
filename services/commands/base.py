@@ -22,7 +22,7 @@ Example:
     cmd = MyCommand.get_instance()
     cmd.execute('arg1', 'arg2')
 """
-class Command(ABC):
+class Base(ABC):
     instance = {}
 
     @classmethod

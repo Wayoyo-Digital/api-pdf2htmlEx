@@ -1,6 +1,6 @@
 import subprocess
 from pprint import pprint
-from .base import Command
+from .base import Base as Command
 
 """
 Command handler for converting PDF files to HTML using pdf2htmlEX.
