@@ -11,7 +11,7 @@ async def get_html(filename: str):
     from fastapi import HTTPException
     from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-    # Strip extension before sanitizing, and do not add any default extension
+    # Strip extension before sanitizing, and add .html as default extension
     name_only = os.path.splitext(filename)[0]
     safe_name = sanitize_filename(name_only, default_ext=".html")
     html_path = os.path.join(UPLOAD_PATH, safe_name)
@@ -26,6 +26,6 @@ async def get_html(filename: str):
     if not os.path.isfile(html_path):
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
-            detail=f"The HTML file '{safe_name}.html' does not exist."
+            detail=f"The HTML file '{safe_name}' does not exist."
         )
     return FileResponse(html_path)
