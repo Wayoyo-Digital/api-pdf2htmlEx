@@ -9,18 +9,32 @@ UPLOAD_PATH = os.path.abspath("storage/uploads")
 
 def sanitize_filename(filename: str) -> str:
     """
-    Sanitize filename to prevent directory traversal and ensure safe filenames.
+    Sanitize filename to prevent directory traversal while preserving file extension.
     """
-    filename = os.path.basename(filename)
-    filename = "".join(char for char in filename if ord(char) >= 32)
+    # Split filename into name and extension
+    name, ext = os.path.splitext(os.path.basename(filename))
     
+    # Remove any null bytes and control characters from both parts
+    name = "".join(char for char in name if ord(char) >= 32)
+    ext = "".join(char for char in ext if ord(char) >= 32)
+    
+    # Replace problematic characters in name with underscore
     for char in ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>', ' ', '.']:
-        filename = filename.replace(char, '_')
-        
-    if not filename or filename.startswith('.'):
-        filename = 'unnamed_file'
-        
-    return filename
+        name = name.replace(char, '_')
+    
+    # Clean the extension (remove dots except the first one)
+    if ext:
+        ext = '.' + ext.lstrip('.').replace('.', '_')
+    
+    # Ensure the filename is not empty
+    if not name:
+        name = 'unnamed_file'
+    
+    # If no extension or invalid, default to .pdf for our use case
+    if not ext:
+        ext = '.pdf'
+    
+    return name + ext
 
 def ensure_upload_dir() -> None:
     """
