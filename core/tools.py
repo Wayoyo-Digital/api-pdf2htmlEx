@@ -5,6 +5,7 @@ from starlette.status import HTTP_400_BAD_REQUEST
 
 from fastapi import File, UploadFile, HTTPException
 
+PDF2HTML_PATH = os.path.abspath("core/pdf2htmlEX")
 UPLOAD_PATH = os.path.abspath("storage/uploads")
 
 def sanitize_filename(filename: str) -> str:
@@ -19,7 +20,7 @@ def sanitize_filename(filename: str) -> str:
     ext = "".join(char for char in ext if ord(char) >= 32)
     
     # Replace problematic characters in name with underscore
-    for char in ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>', ' ', '.']:
+    for char in ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>', ' ']:
         name = name.replace(char, '_')
     
     # Clean the extension (remove dots except the first one)
