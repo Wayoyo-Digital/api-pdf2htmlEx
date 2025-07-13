@@ -11,10 +11,10 @@ async def get_html(filename: str):
     from fastapi import HTTPException
     from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-    # Strip extension before sanitizing
+    # Strip extension before sanitizing, and do not add any default extension
     name_only = os.path.splitext(filename)[0]
-    safe_name = sanitize_filename(name_only)
-    html_path = os.path.join(UPLOAD_PATH, f"{safe_name}.html")
+    safe_name = sanitize_filename(name_only, default_ext=".html")
+    html_path = os.path.join(UPLOAD_PATH, safe_name)
 
     # Ensure the final path is still within UPLOAD_PATH (defense in depth)
     if not os.path.abspath(html_path).startswith(os.path.abspath(UPLOAD_PATH)):
