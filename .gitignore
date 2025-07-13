@@ -8,3 +8,6 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 .coverage
+
+# upload path
+storage/uploads/
