@@ -1,5 +1,6 @@
 import importlib
 import pkgutil
+import pprint
 
 from fastapi import FastAPI
 
@@ -10,14 +11,12 @@ This module is responsible for initializing the application by:
     - Registering controllers with FastAPI
     - Registering commands with the Command Bus
 """
-def register_controllers(app: FastAPI) -> None:
-    import controllers
-
+def register_controllers(app: FastAPI, controllers: type, version: str = "v1") -> None:
     modules = pkgutil.iter_modules(controllers.__path__)
     for _, module_name, _ in modules:
-        module = importlib.import_module(f"controllers.{module_name}")
+        module = importlib.import_module(f"controllers.{version}.{module_name}")
         if hasattr(module, "router"):
-            app.include_router(module.router)
+            app.include_router(module.router, prefix=f"/api/{version}")
 
 """
 Register commands with the Command Bus.
@@ -48,5 +47,7 @@ This function orchestrates the registration of controllers and commands,
 ensuring the application is properly configured before starting.
 """
 def run(app: FastAPI) -> None:
+    from controllers import v1
+
     register_commands()
-    register_controllers(app)
+    register_controllers(app, v1)
