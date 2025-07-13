@@ -40,4 +40,4 @@ class Bus(Command):
         if not args:
             raise ValueError(f"No arguments provided for command {name}")
         
-        command.execute(*args)
+        command.execute(args)
