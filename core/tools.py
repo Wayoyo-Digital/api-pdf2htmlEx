@@ -5,35 +5,25 @@ from starlette.status import HTTP_400_BAD_REQUEST
 
 from fastapi import File, UploadFile, HTTPException
 
+PDF2HTML_PATH = os.path.abspath("core/pdf2htmlEX")
 UPLOAD_PATH = os.path.abspath("storage/uploads")
 
-def sanitize_filename(filename: str) -> str:
+def sanitize_filename(filename: str, default_ext: Optional[str] = ".pdf") -> str:
     """
     Sanitize filename to prevent directory traversal while preserving file extension.
+    If no extension is present, adds default_ext (default: .pdf). If default_ext is None, does not add any extension.
     """
-    # Split filename into name and extension
     name, ext = os.path.splitext(os.path.basename(filename))
-    
-    # Remove any null bytes and control characters from both parts
     name = "".join(char for char in name if ord(char) >= 32)
     ext = "".join(char for char in ext if ord(char) >= 32)
-    
-    # Replace problematic characters in name with underscore
     for char in ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>', ' ', '.']:
         name = name.replace(char, '_')
-    
-    # Clean the extension (remove dots except the first one)
     if ext:
         ext = '.' + ext.lstrip('.').replace('.', '_')
-    
-    # Ensure the filename is not empty
     if not name:
         name = 'unnamed_file'
-    
-    # If no extension or invalid, default to .pdf for our use case
-    if not ext:
-        ext = '.pdf'
-    
+    if not ext and default_ext:
+        ext = default_ext
     return name + ext
 
 def ensure_upload_dir() -> None:
@@ -57,9 +47,9 @@ async def upload_temp_file(file: UploadFile = File(...)) -> str:
     
     if not os.path.abspath(save_path).startswith(os.path.abspath(UPLOAD_PATH)):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Invalid file path")
-        
+    
     with open(save_path, "wb") as f:
         while chunk := await file.read(8192):  # 8KB chunks
             f.write(chunk)
-            
+
     return save_path
